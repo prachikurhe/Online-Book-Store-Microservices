@@ -1,0 +1,73 @@
+server:
+  port: 8081
+
+info:
+  app:
+    name: auth-service
+    description: Spring Boot authentication server
+    version: 1.0.0
+
+spring:
+  application:
+    name: auth-service
+
+  cloud:
+    compatibility-verifier:
+      enabled: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          secret-key: ${jwt.secret}
+  datasource:
+    url: jdbc:postgresql://localhost:5432/authdb
+    username: sachin
+    password: root
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        default_schema: codewithsachin
+#  datasource:
+#    url: jdbc:h2:file:./data/authdb
+#    driver-class-name: org.h2.Driver
+#    username: sa
+#    password: password
+
+#  h2:
+#    console:
+#      enabled: true
+#      path: /h2-console
+
+jwt:
+  secret: your256bitsecretkeyyour256bitsecretkey
+  access-token-expiration: 300000
+  refresh-token-expiration: 600000
+
+eureka:
+  instance:
+    lease-renewal-interval-in-seconds: 30
+    lease-expiration-duration-in-seconds: 90
+    health-check-url-path: /actuator/health
+    hostname: localhost
+    prefer-ip-address: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+management:
+#  server:
+#    port: 18081
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  endpoint:
+    health:
+      show-details: always

@@ -1,0 +1,55 @@
+server:
+  port: 8084
+
+spring:
+  application:+
+    name: api-gateway
+
+  cloud:
+    compatibility-verifier:
+      enabled: false
+
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+
+      routes:
+        - id: auth-service
+          uri: ${AUTH_SERVICE_URI:lb://auth-service}     # ✅ Use load-balanced URI
+          predicates:
+            - Path=/auth-server/**
+          filters:
+            - StripPrefix=1
+
+        - id: client-service
+          uri: lb://client-service
+          predicates:
+            - Path=/client-service/**
+          filters:
+            - StripPrefix=1
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          secret-key: ${jwt.secret}
+
+eureka:
+  instance:
+    lease-renewal-interval-in-seconds: 30
+    lease-expiration-duration-in-seconds: 90
+    health-check-url-path: /actuator/health
+    hostname: localhost
+    prefer-ip-address: true
+
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+jwt:
+  secret: your256bitsecretkeyyour256bitsecretkey
+  access-token-expiration: 300000
+  refresh-token-expiration: 600000
