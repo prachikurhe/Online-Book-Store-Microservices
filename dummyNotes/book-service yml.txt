@@ -1,0 +1,53 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: book-service
+  datasource:
+    url: jdbc:h2:mem:bookstoredb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+      console:
+        enabled: true
+        path: /h2-console
+  jpa:
+      hibernate:
+        ddl-auto: update
+      show-sql: true
+      database-platform: org.hibernate.dialect.H2Dialect
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/bookstoredb
+#    username: book_user
+#    password: book@123
+#    driver-class-name: org.postgresql.Driver
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: true
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  config:
+    import: optional:configserver:http://localhost:8888
+    # This tells Spring Boot to try loading configs from the Config Server at this URL.
+    # optional: = App starts even if Config Server is down.
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
+

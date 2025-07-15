@@ -1,0 +1,18 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: config-server
+
+  profiles:
+    active: native
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: file:///C:/Microservices/config-repo/bookstore-config
+#        git:
+#          uri: https://github.com/sachinnagode/bookstore-config.git
+#          default-label: develop
+#          clone-on-start: true

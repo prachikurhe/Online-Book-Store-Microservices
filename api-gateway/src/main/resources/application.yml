@@ -1,0 +1,37 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: book-service
+          uri: lb://book-service
+          predicates:
+            - Path=/book-service/**
+          filters:
+            - RewritePath=/book-service/(?<path>.*), /$\{path}
+
+        - id: cart-service
+          uri: lb://CART-SERVICE
+          predicates:
+              - Path=/cart-service/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+
+
+#Path=/book-service/**: Routes any request that starts with /book-service/.
+#RewritePath=/book-service/(?<path>.*), /${path}: Removes the /book-service prefix before forwarding to the actual book service.
+#lb://book-service: Uses Eureka load-balancing to route to the registered book-service.
+
